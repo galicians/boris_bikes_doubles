@@ -9,6 +9,10 @@ describe BikeContainer do
 	let(:holder) { ContainerHolder.new }
 	let(:station) { DockingStation.new(:capacity => 123) }
 
+	def fill_holder(holder)
+		holder.capacity.times { holder.dock(bike) }
+	end
+
 	it "should accept a bike" do
 		expect{holder.dock(bike)}.to change{holder.bike_count}.by 1
 	end
@@ -17,6 +21,23 @@ describe BikeContainer do
 		holder.dock(bike)
 		expect{holder.release(bike)}.to change{holder.bike_count}.by -1
 	end
+
+	it "should know when it's full" do
+		fill_holder(holder)
+		expect(holder.full?).to be true 
+	end
+
+	it "should not accept a bike if it's full" do
+		fill_holder(holder)
+		expect{holder.dock(bike).to_s}.to raise_error("RuntimeError because it's full")
+	end
+
+	it "should provide the list of available bikes" do
+		holder.dock(bike)
+		expect(holder.available_bikes).to eq([bike])
+	end
+
+
 
 
 	# it "should accept a bike" do

@@ -19,7 +19,7 @@ module BikeContainer
   end
 
   def dock(bike)
-    raise "#{self.to_s} is full" if full?
+    raise "RuntimeError because it's full" if full?
     bikes << bike
   end
 
