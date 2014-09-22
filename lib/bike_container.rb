@@ -24,7 +24,8 @@ module BikeContainer
   end
 
 	def release(bike)
-		raise "#{self.class.to_s} is empty" if available_bikes.empty?
+		raise "RuntimeError this is not a bike" if bike.class != Bike
+    raise "RuntimeError it is empty" if available_bikes.empty?
 		bikes.delete(bike)
 		return bike
 	end

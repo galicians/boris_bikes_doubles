@@ -5,9 +5,10 @@ class ContainerHolder; include BikeContainer; end
 
 describe BikeContainer do 
 
-	let(:bike) { double :bike , broken?: false }
+	let(:bike) { double :bike , broken?: false, class: Bike }
 	let(:holder) { ContainerHolder.new }
-	let(:station) { DockingStation.new(:capacity => 123) }
+	let(:broken_bike) { double :bike, broken?: true}
+	
 
 	def fill_holder(holder)
 		holder.capacity.times { holder.dock(bike) }
@@ -34,33 +35,23 @@ describe BikeContainer do
 
 	it "should provide the list of available bikes" do
 		holder.dock(bike)
+		holder.dock(broken_bike)
 		expect(holder.available_bikes).to eq([bike])
 	end
 
+	it "should provide the list of broken bikes" do
+		holder.dock(broken_bike)
+		expect(holder.broken_bikes).to eq([broken_bike])
+	end
+
+	it "should not release anything that is not a bike" do
+		expect{holder.release('this is not a bike')}.to raise_error('RuntimeError this is not a bike')
+	end
+
+	it "should not release a bike if empty" do
+		expect{holder.release(bike)}.to raise_error("RuntimeError it is empty")
+	end
 
 
-
-	# it "should accept a bike" do
-	# 	expect(holder.bike_count).to eq(0)
-	# 	holder.dock(bike)
-	# 	expect(holder.bike_count).to eq(1)
-	# end
-
-	# it "should allow setting default capacity on initialising" do
-	# 	expect(station.capacity).to eq(123)
-	# end
-
-	# it "should return the available bikes" do
-	# 	expect(holder.bike_count).to eq(0)
-	# 	holder.dock(bike)
-	# 	expect(holder.bike_count).to eq(1)
-	# end
-
-	# it 'dock station should provide the list of broken bikes' do
-	# 	broken_bike, working_bike = Bike.new, Bike.new
-	# 	broken_bike.break!
-	# 	holder.dock(broken_bike)
-	# 	expect(holder.broken_bikes).to eq([broken_bike])
-	# end
 	
 end
